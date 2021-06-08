@@ -22,4 +22,10 @@
         android:name="com.kenmurrell.zerbert.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_vault"
+        android:name="com.kenmurrell.zerbert.ui.vault.VaultFragment"
+        android:label="@string/menu_vault"
+        tools:layout="@layout/fragment_vault" />
 </navigation>
