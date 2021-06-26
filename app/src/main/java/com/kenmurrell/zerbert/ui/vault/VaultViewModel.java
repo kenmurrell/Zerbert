@@ -9,7 +9,7 @@ public class VaultViewModel extends ViewModel {
 
     public VaultViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        mText.setValue("This is vault fragment");
     }
 
     public LiveData<String> getText() {

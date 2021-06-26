@@ -6,20 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".ui.vault.VaultFragment">
 
+    <TextView
+        android:id="@+id/text_vault"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/vault_unlock_textfield"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.186" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/vault_unlock_textfield"
-        android:layout_width="269dp"
-        android:layout_height="26dp"
-        android:hint="@string/vault_password_hint"
+        android:layout_width="274dp"
+        android:layout_height="77dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="63dp"
+            android:hint="@string/vault_password_hint" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -31,19 +46,20 @@
         android:text="@string/vault_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vault_unlock_textfield"
-        app:layout_constraintVertical_bias="0.034" />
+        app:layout_constraintVertical_bias="0.719" />
 
     <ImageView
         android:id="@+id/vault_note_image"
-        android:layout_width="94dp"
-        android:layout_height="112dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="193dp"
+        android:layout_height="244dp"
+        app:layout_constraintBottom_toTopOf="@+id/vault_unlock_textfield"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vault_unlock_button" />
+        app:layout_constraintTop_toBottomOf="@+id/text_vault"
+        android:contentDescription="TODO ADD THIS" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

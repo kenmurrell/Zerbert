@@ -18,10 +18,10 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.kenmurrell.zerbert.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_random"
+        android:name="com.kenmurrell.zerbert.ui.random.RandomFragment"
+        android:label="@string/menu_random"
+        tools:layout="@layout/fragment_random" />
 
     <fragment
         android:id="@+id/nav_vault"
