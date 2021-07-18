@@ -16,4 +16,19 @@
     <string name="vault_password_hint">Enter your password here</string>
     <string name="vault_button_text">unlock</string>
     <string name="random_button_text">next</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Settings Menu -->
+    <string name="messaging_header">Messaging</string>
+    <string name="partner_name_title">Partner Name</string>
+    <string name="partner_number_title">Partner Number</string>
+    <string name="show_messages_title">Show Messages</string>
+    <string name="show_messages_summary_on">Show messages from your partner\'s app</string>
+    <string name="show_messages_summary_off">Do not show messages from your partner\'s app</string>
+    <string name="messaging_interval_title">Messaging Interval</string>
+
+    <string name="notes_header">Notes</string>
+    <string name="decrypt_all_title">Decrypt All Notes</string>
+    <string name="decrypt_all_summary_on">Nice try; this doesn\'t do anything!</string>
+
 </resources>

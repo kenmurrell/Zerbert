@@ -1,0 +1,16 @@
+<resources>
+    <!-- Messaging Settings -->
+    <string-array name="messaging_interval_entries">
+        <item>0 seconds</item>
+        <item>5 seconds</item>
+        <item>10 seconds</item>
+        <item>30 seconds</item>
+    </string-array>
+
+    <string-array name="messaging_interval_values">
+        <item>0</item>
+        <item>5</item>
+        <item>10</item>
+        <item>30</item>
+    </string-array>
+</resources>

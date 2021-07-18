@@ -3,14 +3,15 @@ package com.kenmurrell.zerbert;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -20,6 +21,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
@@ -27,7 +29,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.kenmurrell.zerbert.databinding.ActivityMainBinding;
 import com.kenmurrell.zerbert.ui.SmsListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener
+{
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
@@ -35,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private final IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -64,14 +68,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        //temporary until i get this setup
-        SharedPreferences.Editor editor  = getSharedPreferences("userpreferences", 0).edit();
-        editor.putString("number", "6138858659");
-        editor.putString("name", "tester");
-        editor.commit();
-
         receiver = new SmsReceiver();
         this.registerReceiver(receiver,  filter);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.registerOnSharedPreferenceChangeListener(this);
 
         SmsReceiver.bindListener(new SmsListener() {
             @Override
@@ -96,35 +97,59 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+        if (id == R.id.action_settings)
+        {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onResume() {
+    public boolean onSupportNavigateUp()
+    {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onResume()
+    {
         // Register receiver if activity is in front
         this.registerReceiver(receiver, filter);
         super.onResume();
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         // Unregister receiver if activity is not in front
         this.unregisterReceiver(receiver);
         super.onPause();
     }
 
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     public void PopUpGif()
     {
+        // Will replace this with mapping later
         ImageView image = new ImageView(this);
         Glide.with(this).load(R.drawable.animated_heart).into(image);
         image.setImageResource(R.drawable.animated_heart);
@@ -140,5 +165,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).create();
         pop.show();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
+    {
+        // for later, else delete
     }
 }

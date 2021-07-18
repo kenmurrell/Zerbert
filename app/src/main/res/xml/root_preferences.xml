@@ -1,0 +1,41 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/messaging_header">
+
+        <EditTextPreference
+            app:key="partner_name"
+            app:title="@string/partner_name_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="partner_number"
+            app:title="@string/partner_number_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="show_messages"
+            app:title="@string/show_messages_title"
+            app:summaryOff="@string/show_messages_summary_off"
+            app:summaryOn="@string/show_messages_summary_on"/>
+
+        <ListPreference
+            app:dependency="show_messages"
+            app:defaultValue="5"
+            app:entries="@array/messaging_interval_entries"
+            app:entryValues="@array/messaging_interval_values"
+            app:key="messaging_interval"
+            app:title="@string/messaging_interval_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/notes_header">
+
+        <SwitchPreferenceCompat
+            app:key="decrypt_all"
+            app:title="@string/decrypt_all_title"
+            app:summaryOn="@string/decrypt_all_summary_on"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
