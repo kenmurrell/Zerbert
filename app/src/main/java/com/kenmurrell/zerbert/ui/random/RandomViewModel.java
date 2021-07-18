@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class RandomViewModel extends ViewModel {
+public class RandomViewModel extends ViewModel
+{
 
     private MutableLiveData<String> mText;
 
-    public RandomViewModel() {
+    public RandomViewModel()
+    {
         mText = new MutableLiveData<>();
-        mText.setValue("This is random fragment");
+        mText.setValue("Press the next button!");
     }
 
     public LiveData<String> getText() {
