@@ -1,30 +1,38 @@
 package com.kenmurrell.zerbert;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
-
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.kenmurrell.zerbert.databinding.ActivityMainBinding;
+import com.kenmurrell.zerbert.ui.SmsListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    private SmsReceiver receiver;
+    private final IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +45,11 @@ public class MainActivity extends AppCompatActivity {
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                PopUpGif();
+                Snackbar
+                        .make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -55,16 +66,33 @@ public class MainActivity extends AppCompatActivity {
 
         //temporary until i get this setup
         SharedPreferences.Editor editor  = getSharedPreferences("userpreferences", 0).edit();
-        editor.putString("number", "6138755969");
+        editor.putString("number", "6138858659");
+        editor.putString("name", "tester");
         editor.commit();
+
+        receiver = new SmsReceiver();
+        this.registerReceiver(receiver,  filter);
+
+        SmsReceiver.bindListener(new SmsListener() {
+            @Override
+            public void messageReceived(String messageText) {
+                PopUpGif();
+            }
+        });
 
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
         }
-
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS}, 1);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, 1);
+        }
     }
 
     @Override
@@ -79,5 +107,38 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onResume() {
+        // Register receiver if activity is in front
+        this.registerReceiver(receiver, filter);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        // Unregister receiver if activity is not in front
+        this.unregisterReceiver(receiver);
+        super.onPause();
+    }
+
+    public void PopUpGif()
+    {
+        ImageView image = new ImageView(this);
+        Glide.with(this).load(R.drawable.animated_heart).into(image);
+        image.setImageResource(R.drawable.animated_heart);
+        AlertDialog pop = new AlertDialog.Builder(MainActivity.this)
+                .setCancelable(true)
+                .setTitle("Someone sent you a heart!")
+                .setView(image)
+                .setInverseBackgroundForced(true)
+                .setNeutralButton("Close",new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                        dialog.dismiss();
+                    }
+                }).create();
+        pop.show();
     }
 }
