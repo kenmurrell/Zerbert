@@ -13,12 +13,11 @@
     <string name="menu_vault">Notes</string>
 
 
-    <string name="vault_password_hint">Enter your password here</string>
-    <string name="vault_button_text">unlock</string>
-    <string name="random_button_text">next</string>
-    <string name="title_activity_settings">SettingsActivity</string>
 
-    <!-- Settings Menu -->
+
+
+    <!-- Settings Activity -->
+    <string name="title_activity_settings">Settings\</string>
     <string name="messaging_header">Messaging</string>
     <string name="partner_name_title">Partner Name</string>
     <string name="partner_number_title">Partner Number</string>
@@ -30,5 +29,18 @@
     <string name="notes_header">Notes</string>
     <string name="decrypt_all_title">Decrypt All Notes</string>
     <string name="decrypt_all_summary_on">Nice try; this doesn\'t do anything!</string>
+
+
+
+    <!-- Vault Fragment-->
+    <string name="vault_button_text">unlock</string>
+    <string name="random_button_text">next</string>
+    <string name="vault_status_invalid">Invalid!</string>
+    <string name="vault_status_accepted">Accepted!</string>
+    <string name="vault_text_entry_hint">Enter your key here</string>
+
+    <string name="note2">
+        BBPcKVFFWaSGmC8TqGG3thJr01AJI9LByLwnEGK0BdUy21tisxjM1HvaSse/HbftIMeUOnh3hQ6HIn1v0GdGFDUvB6Y06amUiwMghAgeIfzHB4Sw0KsR39qvFuNIqOON485n0tpSyXnoMVTJ7fXpqz2rjeQ4D+iETI9Olxf6R+bPdL6H14HG2VJMQh/htKMXtTjh+XVf6UI6mzac9erch7ixa9grKIe8N6ZRt5LN4L2/bdCEkC0HOps8MHnMVpHbOWnNRIhU/PKWQUOqS7ghstCHuyHLhiRyHkqIKzmkC0UGZa5HIO5nyV40VN7DncMi1dqAZXjg2P46oS7T7ZHPmzV+lDJJ9Dl2oaY3V7X1JcoKS+8LOI6e8VuvJhv+lMmbupWBqeGPgXzYweU1y6R4K/oiLORrZoIjoRhcEZziPh7v7ylwoy9LF59Q4LCaoB60CPRvWXM9IpJi4QZ0LgM/mAmHjibr4rMCWJPqjOwewsLW3xx1jQ4cJPJ12ptIgRGY4Ek6cKydyvL80+3E8UYFAuJ+dsKfk4TlHGD/PChUpe05LNbOR4zwc4f8XaWyQnAJBVM06a9S4ZORDoBjtPwzpkCnqDxUkuwLnci+Q+R8FX2S7KjR2QFVEC1cQTMZGsNQ63Cwm4+aARk3xQ6SCXQKaYImHMqM8I39QPssEyioJ6DObpY+ujSF6ABSyuAtsD4qpmX5nKjc4cXCjIoV2201kD9fOKZ++wRIDceDtBTr5dzjUadC4oQx4Yt2+LrQ6DQ/iIeg25eDkxldHJL73XV0EG1SaSkWhiIeYArsQ0PrRYrhTOHn1QNCKwC6AcTte2P0Nl0iIAEQM4k4ErMDAZmOK85ZG0B1GzqCDQdVZy2yvrrp+QLnejDnQRYdMRN6Ls9/+3F/tALiB1hGDju2J/mEaa9fRcdBlAl1PnR2zG+3x7BTe2+NYuyzk8FCp4saDCNyVkDelsq02ZmOiStXOlUVkL5MLphp113GWZY6eMplubs9TV4sekywjLSqu4R5r5rC3v1eLs6q0bm8qiQ0yUtCpcYmeWCSEBV6Qe2+bmQOtuPw0qLeGBtk9KZLbOCNxVT3dzsv1Dmzq04hAYqODCuZkOzlzErgUkgfs0C1uPGvPXtszW6rVWNQd3GuwxUeRURetdYWov3kBJf/1uCk3vVRWn6Eb2SpJmIdaVOUjUiXee1ef+GibhbD3n9LORldyrXeMEAJtN376O0QakgcOpbVAp/kbL3OGGLZF09G2sdUKXm9y03sB9/vRknG7XiZ6CljLBRebMgDLuK/afKfAPaMIEMnNZrnpR7nqvUXt4wkkpEPAWJCdLaattCTvnf0SvDEARSYVE5W698pC50CR00a4eF7U+MeJbOdk9ZQaGiDlDpF5n++zNjAPhzcKt5iB07lFNYOJ6Wi1mI4FgRBe64RmQ==
+    </string>
 
 </resources>
