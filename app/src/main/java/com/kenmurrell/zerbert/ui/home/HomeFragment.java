@@ -8,85 +8,89 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.kenmurrell.zerbert.Emotion;
+import com.kenmurrell.zerbert.EmotionDecoder;
 import com.kenmurrell.zerbert.R;
 import com.kenmurrell.zerbert.databinding.FragmentHomeBinding;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment
+{
 
-    private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    private SharedPreferences settings;
+    private EmotionDecoder ed;
+    private SharedPreferences sharedPreferences;
+    private boolean hasConfig;
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
         ImageButton loveButton = root.findViewById(R.id.loveButton);
-        loveButton.setOnClickListener(this::onLoveButton);
-        ImageButton thinkButton = root.findViewById(R.id.thinkButton);
-        thinkButton.setOnClickListener(this::onThinkButton);
+        loveButton.setOnClickListener(view -> onButton(view, "love"));
+        ImageButton thinkButton = root.findViewById(R.id.babyButton);
+        thinkButton.setOnClickListener(view -> onButton(view, "baby"));
         ImageButton hornyButton = root.findViewById(R.id.hornyButton);
-        hornyButton.setOnClickListener(this::onHornyButton);
+        hornyButton.setOnClickListener(view -> onButton(view, "horny"));
         ImageButton angryButton = root.findViewById(R.id.angryButton);
-        angryButton.setOnClickListener(this::onAngryButton);
+        angryButton.setOnClickListener(view -> onButton(view, "angry"));
+        ImageButton hungryButton = root.findViewById(R.id.hungryButton);
+        hungryButton.setOnClickListener(view -> onButton(view, "hungry"));
+        ImageButton sadButton = root.findViewById(R.id.sadButton);
+        sadButton.setOnClickListener(view -> onButton(view, "sad"));
 
-        settings = getActivity().getSharedPreferences("userpreferences",0);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        hasConfig = sharedPreferences.contains("partner_name") && sharedPreferences.contains("partner_number");
+
+
+        // retrieve this from mainactivity
+        ed = new EmotionDecoder();
+        ed.register(new Emotion("love", R.drawable.animated_heart).setVerbAndReturn("is in"));
+        ed.register(new Emotion("baby", R.drawable.tarzan_baby).setVerbAndReturn("wants a"));
+        ed.register(new Emotion("horny", R.drawable.olivia_wilde_horny).setVerbAndReturn("is kinda"));
+        ed.register(new Emotion("angry", R.drawable.angry_bird).setVerbAndReturn("is really"));
+        ed.register(new Emotion("hungry", R.drawable.hungry_pooh).setVerbAndReturn("is super"));
+        ed.register(new Emotion("sad", R.drawable.sad_cat).setVerbAndReturn("is"));
 
         return root;
     }
 
-    private boolean onLoveButton(View view){
-        String number = settings.getString("number", "0");
-        boolean r = sendMessage("love!love!love!", number);
-        Snackbar.make(view, r? "pass" : "fail", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        return true;
-    }
-
-    private boolean onThinkButton(View view){
-        String number = settings.getString("number", "0");
-        boolean r = sendMessage("think!think!think!", number);
-        Snackbar.make(view, r? "pass" : "fail", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        return true;
-    }
-
-    private boolean onHornyButton(View view){
-        String number = settings.getString("number", "0");
-        boolean r = sendMessage("sex!sex!sex!", number);
-        Snackbar.make(view, r? "pass" : "fail", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        return true;
-    }
-
-    private boolean onAngryButton(View view){
-        String number = settings.getString("number", "0");
-        boolean r = sendMessage("grrr!grrr!grrr!", number);
-        Snackbar.make(view, r? "pass" : "fail", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        return true;
-    }
-
-    public static Boolean sendMessage(String msg, String number) {
-        if (PhoneNumberUtils.isGlobalPhoneNumber(number)) {
-            SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(number, null, msg, null, null);
-            return true;
-        } else {
-            return false;
+    private void onButton(View view, String code)
+    {
+        if(!hasConfig)
+        {
+            Snackbar.make(view, "Cannot send! Name or number not set!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            return;
         }
+        try
+        {
+            String name = sharedPreferences.getString("partner_name", "null");
+            String number = sharedPreferences.getString("partner_number", "null");
+            if (!PhoneNumberUtils.isGlobalPhoneNumber(number))
+            {
+                Snackbar.make(view, "Not a valid phone number!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                return;
+            }
+            SmsManager.getDefault().sendTextMessage(number, null, ed.encode(code), null, null);
+            String text = "Sent " + code + " to " + name + "!";
+            Snackbar.make(view, text, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
+        catch (UnsupportedOperationException e)
+        {
+            Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
+
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()
+    {
         super.onDestroyView();
         binding = null;
     }

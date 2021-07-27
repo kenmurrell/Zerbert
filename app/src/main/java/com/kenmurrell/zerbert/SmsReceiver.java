@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
@@ -56,10 +57,10 @@ public class SmsReceiver extends BroadcastReceiver
             {
                 for(SmsMessage message : messages)
                 {
-                    String address = message.getOriginatingAddress();
+                    String address = PhoneNumberUtils.formatNumber(message.getOriginatingAddress(), "CAN");
                     String messageBody = message.getMessageBody();
-                    String number = sp.getString("partner_number", "0");
-                    if(number.equals(address))
+                    String number = PhoneNumberUtils.formatNumber(sp.getString("partner_number", "0"));
+                    if(PhoneNumberUtils.compare(number, address))
                     {
                         Log.i(TAG, String.format("Message received: {%s}.", messageBody));
                         createdDate = LocalDateTime.now(); // OnReceive often gets called twice from 1 txt message...this stops it

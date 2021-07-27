@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     private SmsReceiver receiver;
+    private EmotionDecoder ed;
     private final IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 
     @Override
@@ -74,13 +75,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sp.registerOnSharedPreferenceChangeListener(this);
 
-        SmsReceiver.bindListener(new SmsListener() {
-            @Override
-            public void messageReceived(String messageText) {
-                PopUpGif();
-            }
-        });
+        ed = new EmotionDecoder();
+        ed.register(new Emotion("love", R.drawable.animated_heart).setVerbAndReturn("is in"));
+        ed.register(new Emotion("baby", R.drawable.tarzan_baby).setVerbAndReturn("wants a"));
+        ed.register(new Emotion("horny", R.drawable.olivia_wilde_horny).setVerbAndReturn("is kinda"));
+        ed.register(new Emotion("angry", R.drawable.angry_bird).setVerbAndReturn("is really"));
+        ed.register(new Emotion("hungry", R.drawable.hungry_pooh).setVerbAndReturn("is super"));
+        ed.register(new Emotion("sad", R.drawable.sad_cat).setVerbAndReturn("is"));
 
+        SmsReceiver.bindListener(this::onReceiveText);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED)
         {
@@ -147,6 +150,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    private void onReceiveText(String text)
+    {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String name = sp.getString("partner_name", "null");
+        ed.decode(text).ifPresent(e -> {
+            ImageView image = new ImageView(this);
+            Glide.with(this).load(e.getGif()).into(image);
+            image.setImageResource(e.getGif());
+            AlertDialog pop = new AlertDialog.Builder(MainActivity.this)
+                    .setCancelable(true)
+                    .setTitle(String.format("%s %s %s!", name, e.getVerb(), e.getId()))
+                    .setView(image)
+                    .setInverseBackgroundForced(true)
+                    .setNeutralButton("Close", (dialog, which) -> dialog.dismiss()).create();
+            pop.show();
+        });
+    }
+
     public void PopUpGif()
     {
         // Will replace this with mapping later
@@ -158,12 +179,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 .setTitle("Someone sent you a heart!")
                 .setView(image)
                 .setInverseBackgroundForced(true)
-                .setNeutralButton("Close",new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        dialog.dismiss();
-                    }
-                }).create();
+                .setNeutralButton("Close", (dialog, which) -> dialog.dismiss()).create();
         pop.show();
     }
 

@@ -12,9 +12,13 @@
     <string name="menu_random">Pictures</string>
     <string name="menu_vault">Notes</string>
 
-
-
-
+    <!-- Home Activity -->
+    <string name="love_button_description">Tell your partner you love them!</string>
+    <string name="hungry_button_description">Tell your partner you are hungry!</string>
+    <string name="sad_button_description">Tell your partner you are sad!</string>
+    <string name="angry_button_description">Tell your partner you are angry!</string>
+    <string name="horny_button_description">Tell your partner you are horny!</string>
+    <string name="baby_button_description">Tell your partner you want a baby!</string>
 
     <!-- Settings Activity -->
     <string name="title_activity_settings">Settings\</string>
@@ -25,14 +29,11 @@
     <string name="show_messages_summary_on">Show messages from your partner\'s app</string>
     <string name="show_messages_summary_off">Do not show messages from your partner\'s app</string>
     <string name="messaging_interval_title">Messaging Interval</string>
-
-    <string name="notes_header">Notes</string>
     <string name="decrypt_all_title">Decrypt All Notes</string>
     <string name="decrypt_all_summary_on">Nice try; this doesn\'t do anything!</string>
 
-
-
     <!-- Vault Fragment-->
+    <string name="notes_header">Notes</string>
     <string name="vault_button_text">unlock</string>
     <string name="random_button_text">next</string>
     <string name="vault_status_invalid">Invalid!</string>
