@@ -84,6 +84,8 @@
                 android:id="@+id/vault_unlock_textedit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
                 android:hint="@string/vault_text_entry_hint"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>

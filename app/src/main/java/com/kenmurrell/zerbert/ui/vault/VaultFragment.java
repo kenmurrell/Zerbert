@@ -3,7 +3,9 @@ package com.kenmurrell.zerbert.ui.vault;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.kenmurrell.zerbert.DataUtils;
 import com.kenmurrell.zerbert.R;
 import com.kenmurrell.zerbert.databinding.FragmentVaultBinding;
@@ -21,17 +24,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class VaultFragment extends Fragment {
+public class VaultFragment extends Fragment
+{
+
+    private static final String TAG = "SMSReceiver";
 
     private VaultViewModel vaultViewModel;
     private FragmentVaultBinding binding;
 
-    private static final Map<String, Integer> items = new HashMap<String, Integer>(){{
-        put("805d05d3b2766e6e86862901e1e47e38457bdfb9", R.string.note2); //sha1 = "moby"
+
+    private static final Map<String, Integer> items = new HashMap<String, Integer>()
+    {{
+        put("c92db3c53b17aba69c5ffe67300eef9e7a2935fe", R.string.note2); //sha1 = "moby"
     }};
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         vaultViewModel = new ViewModelProvider(this).get(VaultViewModel.class);
         binding = FragmentVaultBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -43,6 +52,13 @@ public class VaultFragment extends Fragment {
                 }
             }
         });
+
+        InputFilter[] editFilters = binding.vaultUnlockTextedit.getFilters();
+        InputFilter[] newFilters = new InputFilter[editFilters.length + 1];
+        System.arraycopy(editFilters, 0, newFilters, 0, editFilters.length);
+        newFilters[editFilters.length] = new InputFilter.AllCaps();
+        binding.vaultUnlockTextedit.setFilters(newFilters);
+
         Button unlockButton= root.findViewById(R.id.vault_unlock_button);
         unlockButton.setOnClickListener(this::onUnlockButton);
         return root;
@@ -84,9 +100,11 @@ public class VaultFragment extends Fragment {
             String text = DataUtils.decryptText(getResources().getString(noteId), name);
             binding.vaultNoteArea.setText(text);
             binding.vaultNoteArea.setMovementMethod(new ScrollingMovementMethod());
-        }catch (DataUtils.CryptoException e)
+        }
+        catch (DataUtils.CryptoException e)
         {
-            e.printStackTrace();
+            Snackbar.make(binding.getRoot(), "Decryption Error", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Log.e(TAG, "Decryption Error: " + e.getMessage());
         }
 
 
