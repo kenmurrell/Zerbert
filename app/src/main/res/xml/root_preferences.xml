@@ -12,8 +12,6 @@
         <EditTextPreference
             app:key="partner_number"
             app:title="@string/partner_number_title"
-            android:inputType="numberDecimal"
-            android:digits="0123456789"
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreferenceCompat

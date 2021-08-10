@@ -37,11 +37,18 @@ public class SmsReceiver extends BroadcastReceiver
             return;
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean show = sp.getBoolean("show_messages", true);
-        int interval = Integer.parseInt(sp.getString("messaging_interval", "5"));
-        if(!show || createdDate.plusSeconds(interval).isAfter(LocalDateTime.now()))
+        boolean show = sp.getBoolean("show_messages", true)
+                && sp.getBoolean("valid_partner_name", false)
+                && sp.getBoolean("valid_partner_number", false);
+        if(!show)
         {
-            Log.i(TAG, String.format("Messaging interval (%d) has not yet passed, returning.", interval));
+            Log.i(TAG, "Messaging turned off or partner name/number invalid, aborting.");
+            return;
+        }
+        int interval = Integer.parseInt(sp.getString("messaging_interval", "5"));
+        if(createdDate.plusSeconds(interval).isAfter(LocalDateTime.now()))
+        {
+            Log.i(TAG, String.format("Messaging interval (%d) has not yet passed, aborting.", interval));
             return;
         }
         Bundle bundle = intent.getExtras();
@@ -57,7 +64,7 @@ public class SmsReceiver extends BroadcastReceiver
             {
                 for(SmsMessage message : messages)
                 {
-                    String address = PhoneNumberUtils.formatNumber(message.getOriginatingAddress(), "CAN");
+                    String address = PhoneNumberUtils.formatNumber(message.getOriginatingAddress(), "CA");
                     String messageBody = message.getMessageBody();
                     String number = PhoneNumberUtils.formatNumber(sp.getString("partner_number", "0"));
                     if(PhoneNumberUtils.compare(number, address))

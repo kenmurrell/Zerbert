@@ -2,7 +2,6 @@ package com.kenmurrell.zerbert.ui.home;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ public class HomeFragment extends Fragment
     private FragmentHomeBinding binding;
     private EmotionDecoder ed;
     private SharedPreferences sharedPreferences;
-    private boolean hasConfig;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -45,9 +43,7 @@ public class HomeFragment extends Fragment
         ImageButton sadButton = root.findViewById(R.id.sadButton);
         sadButton.setOnClickListener(view -> onButton(view, "sad"));
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        hasConfig = sharedPreferences.contains("partner_name") && sharedPreferences.contains("partner_number");
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         // retrieve this from mainactivity
         ed = new EmotionDecoder();
@@ -63,20 +59,24 @@ public class HomeFragment extends Fragment
 
     private void onButton(View view, String code)
     {
-        if(!hasConfig)
+        if(!sharedPreferences.getBoolean("valid_partner_name", false))
         {
-            Snackbar.make(view, "Cannot send! Name or number not set!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Snackbar.make(view, "Cannot send, partner name not set!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show();
+            return;
+        }
+        if(!sharedPreferences.getBoolean("valid_partner_number", false))
+        {
+            Snackbar.make(view, "Cannot send, partner number is invalid!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null)
+                    .show();
             return;
         }
         try
         {
             String name = sharedPreferences.getString("partner_name", "null");
             String number = sharedPreferences.getString("partner_number", "null");
-            if (!PhoneNumberUtils.isGlobalPhoneNumber(number))
-            {
-                Snackbar.make(view, "Not a valid phone number!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                return;
-            }
             SmsManager.getDefault().sendTextMessage(number, null, ed.encode(code), null, null);
             String text = "Sent " + code + " to " + name + "!";
             Snackbar.make(view, text, Snackbar.LENGTH_LONG).setAction("Action", null).show();
