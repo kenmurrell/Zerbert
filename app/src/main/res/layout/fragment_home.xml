@@ -29,7 +29,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/buttons_grid_border">
 
         <TableRow
             android:id="@+id/buttonTableRow1"
@@ -48,7 +49,7 @@
                 android:minHeight="100dp"
                 android:background="@drawable/roundcorner"
                 android:contentDescription="@string/love_button_description"
-                android:src="@drawable/icons8_two_hearts_64" />
+                android:src="@drawable/button_icon_two_hearts_64" />
 
             <ImageButton
                 android:id="@+id/babyButton"
@@ -60,7 +61,7 @@
                 android:minHeight="100dp"
                 android:background="@drawable/roundcorner"
                 android:contentDescription="@string/baby_button_description"
-                android:src="@drawable/icons8_baby_64" />
+                android:src="@drawable/button_icon_baby_64" />
         </TableRow>
 
         <TableRow
@@ -80,7 +81,7 @@
                 android:minHeight="100dp"
                 android:background="@drawable/roundcorner"
                 android:contentDescription="@string/horny_button_description"
-                android:src="@drawable/icons8_eggplant_64" />
+                android:src="@drawable/button_icon_eggplant_64" />
 
             <ImageButton
                 android:id="@+id/angryButton"
@@ -92,7 +93,7 @@
                 android:minHeight="100dp"
                 android:background="@drawable/roundcorner"
                 android:contentDescription="@string/angry_button_description"
-                android:src="@drawable/icons8_angry_eye_64" />
+                android:src="@drawable/button_icon_angry_eye_64" />
         </TableRow>
 
         <TableRow
@@ -112,7 +113,7 @@
                 android:minHeight="100dp"
                 android:background="@drawable/roundcorner"
                 android:contentDescription="@string/hungry_button_description"
-                android:src="@drawable/icons8_hamburger_64" />
+                android:src="@drawable/button_icon_hamburger_64" />
 
             <ImageButton
                 android:id="@+id/sadButton"
@@ -124,7 +125,7 @@
                 android:minHeight="100dp"
                 android:background="@drawable/roundcorner"
                 android:contentDescription="@string/sad_button_description"
-                android:src="@drawable/icons8_rain_64" />
+                android:src="@drawable/button_icon_rain_64" />
         </TableRow>
     </TableLayout>
 

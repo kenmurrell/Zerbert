@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.kenmurrell.zerbert.Emotion;
 import com.kenmurrell.zerbert.EmotionDecoder;
 import com.kenmurrell.zerbert.R;
 import com.kenmurrell.zerbert.databinding.FragmentHomeBinding;
@@ -22,7 +21,6 @@ public class HomeFragment extends Fragment
 {
 
     private FragmentHomeBinding binding;
-    private EmotionDecoder ed;
     private SharedPreferences sharedPreferences;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -44,15 +42,6 @@ public class HomeFragment extends Fragment
         sadButton.setOnClickListener(view -> onButton(view, "sad"));
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-
-        // retrieve this from mainactivity
-        ed = new EmotionDecoder();
-        ed.register(new Emotion("love", R.drawable.animated_heart).setVerbAndReturn("is in"));
-        ed.register(new Emotion("baby", R.drawable.tarzan_baby).setVerbAndReturn("wants a"));
-        ed.register(new Emotion("horny", R.drawable.olivia_wilde_horny).setVerbAndReturn("is kinda"));
-        ed.register(new Emotion("angry", R.drawable.angry_bird).setVerbAndReturn("is really"));
-        ed.register(new Emotion("hungry", R.drawable.hungry_pooh).setVerbAndReturn("is super"));
-        ed.register(new Emotion("sad", R.drawable.sad_cat).setVerbAndReturn("is"));
 
         return root;
     }
@@ -77,7 +66,7 @@ public class HomeFragment extends Fragment
         {
             String name = sharedPreferences.getString("partner_name", "null");
             String number = sharedPreferences.getString("partner_number", "null");
-            SmsManager.getDefault().sendTextMessage(number, null, ed.encode(code), null, null);
+            SmsManager.getDefault().sendTextMessage(number, null, EmotionDecoder.encode(code), null, null);
             String text = "Sent " + code + " to " + name + "!";
             Snackbar.make(view, text, Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }

@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,13 +25,16 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.kenmurrell.zerbert.databinding.ActivityMainBinding;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
 {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     private SmsReceiver receiver;
-    private EmotionDecoder ed;
+    private List<Emotion> emotions;
     private final IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 
     @Override
@@ -59,13 +61,20 @@ public class MainActivity extends AppCompatActivity
         receiver = new SmsReceiver();
         this.registerReceiver(receiver,  filter);
 
-        ed = new EmotionDecoder();
-        ed.register(new Emotion("love", R.drawable.animated_heart).setVerbAndReturn("is in"));
-        ed.register(new Emotion("baby", R.drawable.tarzan_baby).setVerbAndReturn("wants a"));
-        ed.register(new Emotion("horny", R.drawable.olivia_wilde_horny).setVerbAndReturn("is kinda"));
-        ed.register(new Emotion("angry", R.drawable.angry_bird).setVerbAndReturn("is really"));
-        ed.register(new Emotion("hungry", R.drawable.hungry_pooh).setVerbAndReturn("is super"));
-        ed.register(new Emotion("sad", R.drawable.sad_cat).setVerbAndReturn("is"));
+        emotions = new LinkedList<Emotion>(){{
+            add(new Emotion.Builder().setId("love").setCxt("%s is really in %s with you!")
+                    .addGif(R.drawable.animated_heart).build());
+            add(new Emotion.Builder().setId("baby").setCxt("%s wants a %s from you...")
+                    .addGif(R.drawable.tarzan_baby).build());
+            add(new Emotion.Builder().setId("horny").setCxt("%s is kinda %s for you...")
+                    .addGif(R.drawable.olivia_wilde_horny).build());
+            add(new Emotion.Builder().setId("angry").setCxt("%s is %s!")
+                    .addGif(R.drawable.angry_bird).build());
+            add(new Emotion.Builder().setId("hungry").setCxt("%s is super %s!")
+                    .addGif(R.drawable.hungry_pooh).build());
+            add(new Emotion.Builder().setId("sad").setCxt("%s is a little %s...")
+                    .addGif(R.drawable.sad_cat).build());
+        }};
 
         SmsReceiver.bindListener(this::onReceiveText);
 
@@ -130,33 +139,20 @@ public class MainActivity extends AppCompatActivity
     private void onReceiveText(String text)
     {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = sp.getString("partner_name", "null");
-        ed.decode(text).ifPresent(e -> {
-            ImageView image = new ImageView(this);
-            Glide.with(this).load(e.getGif()).into(image);
-            image.setImageResource(e.getGif());
-            AlertDialog pop = new AlertDialog.Builder(MainActivity.this)
-                    .setCancelable(true)
-                    .setTitle(String.format("%s %s %s!", name, e.getVerb(), e.getId()))
-                    .setView(image)
-                    .setInverseBackgroundForced(true)
-                    .setNeutralButton("Close", (dialog, which) -> dialog.dismiss()).create();
-            pop.show();
-        });
-    }
-
-    public void PopUpGif()
-    {
-        // Will replace this with mapping later
-        ImageView image = new ImageView(this);
-        Glide.with(this).load(R.drawable.animated_heart).into(image);
-        image.setImageResource(R.drawable.animated_heart);
-        AlertDialog pop = new AlertDialog.Builder(MainActivity.this)
-                .setCancelable(true)
-                .setTitle("Someone sent you a heart!")
-                .setView(image)
-                .setInverseBackgroundForced(true)
-                .setNeutralButton("Close", (dialog, which) -> dialog.dismiss()).create();
-        pop.show();
+        String name = sp.getString("partner_name", "Your partner");
+        EmotionDecoder.decode(text)
+                .flatMap(c -> emotions.stream().filter(e -> e.getId().equals(c)).findFirst())
+                .ifPresent(emotion -> {
+                    ImageView image = new ImageView(this);
+                    Glide.with(this).load(emotion.getGif()).into(image);
+                    image.setImageResource(emotion.getGif());
+                    AlertDialog pop = new AlertDialog.Builder(MainActivity.this)
+                            .setCancelable(true)
+                            .setTitle(String.format(emotion.getContext(), name, emotion.getId()))
+                            .setView(image)
+                            .setInverseBackgroundForced(true)
+                            .setNeutralButton("Close", (dialog, which) -> dialog.dismiss()).create();
+                    pop.show();
+                });
     }
 }

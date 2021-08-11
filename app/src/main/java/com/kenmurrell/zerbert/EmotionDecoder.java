@@ -1,45 +1,37 @@
 package com.kenmurrell.zerbert;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class EmotionDecoder
 {
+    private static final String encodedBase = "Zerbert";
+    private static final String padding = "#";
+    private static final String[] format = new String[]{encodedBase, padding};
 
-    private final List<Emotion> emotionList;
-    public EmotionDecoder()
+    public static String encode(String emotion)
     {
-        this.emotionList = new ArrayList<Emotion>();
+        return String.join("", format) + emotion;
     }
 
-    public void register(Emotion e)
+    public static Optional<String> decode(String code)
     {
-        emotionList.add(e);
+        return decode(code, 0);
     }
 
-    public String encode(String item)
+    private static Optional<String> decode(String code, int i)
     {
-        for(Emotion e : emotionList)
+        if(i >= format.length)
         {
-            if(e.getId().equals(item))
-            {
-                return e.encode();
-            }
+            return Optional.of(code);
         }
-        throw new UnsupportedOperationException("Emotion is not supported");
-    }
-
-    public Optional<Emotion> decode(String text)
-    {
-        for(Emotion e :  emotionList)
+        String item = format[i];
+        if(code.length() >= item.length() && code.startsWith(item))
         {
-            Optional<Emotion> opt = e.decode(text, 0);
-            if(opt.isPresent())
-            {
-                return opt;
-            }
+            return decode(code.substring(item.length()), i+1);
         }
-        return Optional.empty();
+        else
+        {
+            return Optional.empty();
+        }
     }
 }
