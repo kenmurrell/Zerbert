@@ -33,10 +33,7 @@ public class VaultFragment extends Fragment
     private FragmentVaultBinding binding;
 
 
-    private static final Map<String, Integer> items = new HashMap<String, Integer>()
-    {{
-        put("c92db3c53b17aba69c5ffe67300eef9e7a2935fe", R.string.note2); //sha1 = "moby"
-    }};
+    private Map<String, Integer> items;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -52,6 +49,19 @@ public class VaultFragment extends Fragment
                 }
             }
         });
+
+        items = new HashMap<String, Integer>()
+        {{
+            put(getString(R.string.note2_hash), R.string.note2_encrypted_text);
+            put(getString(R.string.note3_hash), R.string.note3_encrypted_text);
+            put(getString(R.string.note4_hash), R.string.note4_encrypted_text);
+            put(getString(R.string.note5_hash), R.string.note5_encrypted_text);
+            put(getString(R.string.note6_hash), R.string.note6_encrypted_text);
+            put(getString(R.string.note7_hash), R.string.note7_encrypted_text);
+            put(getString(R.string.note8_hash), R.string.note8_encrypted_text);
+            put(getString(R.string.note9_hash), R.string.note9_encrypted_text);
+            put(getString(R.string.note10_hash), R.string.note10_encrypted_text);
+        }};
 
         InputFilter[] editFilters = binding.vaultUnlockTextedit.getFilters();
         InputFilter[] newFilters = new InputFilter[editFilters.length + 1];
