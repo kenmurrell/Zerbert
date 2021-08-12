@@ -46,7 +46,7 @@ public class SmsReceiver extends BroadcastReceiver
             return;
         }
         int interval = Integer.parseInt(sp.getString("messaging_interval", "5"));
-        if(createdDate.plusSeconds(interval).isAfter(LocalDateTime.now()))
+        if(createdDate.plusSeconds(interval).plusNanos(500000000).isAfter(LocalDateTime.now()))
         {
             Log.i(TAG, String.format("Messaging interval (%d) has not yet passed, aborting.", interval));
             return;
