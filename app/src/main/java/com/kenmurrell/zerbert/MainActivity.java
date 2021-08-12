@@ -63,17 +63,43 @@ public class MainActivity extends AppCompatActivity
 
         emotions = new LinkedList<Emotion>(){{
             add(new Emotion.Builder().setId("love").setCxt("%s is really in %s with you!")
-                    .addGif(R.drawable.animated_heart).build());
+                    .addGif(R.drawable.emotion_love_70s)
+                    .addGif(R.drawable.emotion_love_bunny)
+                    .addGif(R.drawable.emotion_love_disney)
+                    .addGif(R.drawable.emotion_love_grey)
+                    .addGif(R.drawable.emotion_love_hands)
+                    .addGif(R.drawable.emotion_love_hug).build());
             add(new Emotion.Builder().setId("baby").setCxt("%s wants a %s from you...")
-                    .addGif(R.drawable.tarzan_baby).build());
+                    .addGif(R.drawable.emotion_baby_handsup)
+                    .addGif(R.drawable.emotion_baby_mirror)
+                    .addGif(R.drawable.emotion_baby_run)
+                    .addGif(R.drawable.emotion_baby_sleeping)
+                    .addGif(R.drawable.emotion_baby_tarzan).build());
             add(new Emotion.Builder().setId("horny").setCxt("%s is kinda %s for you...")
-                    .addGif(R.drawable.olivia_wilde_horny).build());
+                    .addGif(R.drawable.emotion_horny_jessica_alba)
+                    .addGif(R.drawable.emotion_horny_kisses)
+                    .addGif(R.drawable.emotion_horny_neck)
+                    .addGif(R.drawable.emotion_horny_olivia_wilde)
+                    .addGif(R.drawable.emotion_horny_scratches)
+                    .addGif(R.drawable.emotion_horny_vampire_diaries).build());
             add(new Emotion.Builder().setId("angry").setCxt("%s is %s!")
-                    .addGif(R.drawable.angry_bird).build());
+                    .addGif(R.drawable.emotion_angry_bird)
+                    .addGif(R.drawable.emotion_angry_dwight)
+                    .addGif(R.drawable.emotion_angry_insideout)
+                    .addGif(R.drawable.emotion_angry_owl)
+                    .addGif(R.drawable.emotion_angry_toddler)
+                    .addGif(R.drawable.emotion_angry_tom_jerry).build());
             add(new Emotion.Builder().setId("hungry").setCxt("%s is super %s!")
-                    .addGif(R.drawable.hungry_pooh).build());
+                    .addGif(R.drawable.emotion_hungry_homer_simpson)
+                    .addGif(R.drawable.emotion_hungry_mouse)
+                    .addGif(R.drawable.emotion_hungry_pooh)
+                    .addGif(R.drawable.emotion_hungry_thinking).build());
             add(new Emotion.Builder().setId("sad").setCxt("%s is a little %s...")
-                    .addGif(R.drawable.sad_cat).build());
+                    .addGif(R.drawable.emotion_sad_cat)
+                    .addGif(R.drawable.emotion_sad_drwho)
+                    .addGif(R.drawable.emotion_sad_emporer)
+                    .addGif(R.drawable.emotion_sad_fetal)
+                    .addGif(R.drawable.emotion_sad_michael_scott).build());
         }};
 
         SmsReceiver.bindListener(this::onReceiveText);
