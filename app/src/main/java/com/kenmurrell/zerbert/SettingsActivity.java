@@ -16,6 +16,8 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -49,23 +51,27 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
     {
         View view = findViewById(android.R.id.content);
-        if(key.equals("partner_number"))
-        {
-            String phoneStr = sharedPreferences.getString(key, "");
-            boolean valid_number = PHONE_NUMBER_PATTERN.matcher(phoneStr).matches()
-                    && PhoneNumberUtils.isGlobalPhoneNumber(phoneStr);
-            Snackbar.make(view, valid_number ? "Partner number set!" : "Not a valid phone number!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .show();
-            sharedPreferences.edit().putBoolean("valid_partner_number", valid_number).apply();
-        }
-        else if(key.equals("partner_name"))
-        {
-            boolean valid_name = !sharedPreferences.getString(key, "").isEmpty();
-            Snackbar.make(view, valid_name ? "Partner name set!" : "Not a valid partner name!", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .show();
-            sharedPreferences.edit().putBoolean("valid_partner_name", valid_name).apply();
+        switch (key) {
+            case "partner_number":
+                String phoneStr = sharedPreferences.getString(key, "");
+                boolean valid_number = PHONE_NUMBER_PATTERN.matcher(phoneStr).matches()
+                        && PhoneNumberUtils.isGlobalPhoneNumber(phoneStr);
+                Snackbar.make(view, valid_number ? "Partner number set!" : "Not a valid phone number!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
+                sharedPreferences.edit().putBoolean("valid_partner_number", valid_number).apply();
+                break;
+            case "partner_name":
+                boolean valid_name = !sharedPreferences.getString(key, "").isEmpty();
+                Snackbar.make(view, valid_name ? "Partner name set!" : "Not a valid partner name!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        .show();
+                sharedPreferences.edit().putBoolean("valid_partner_name", valid_name).apply();
+                break;
+            case "show_messages":
+                long lastReceived = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                sharedPreferences.edit().putLong("last_received_emotion", lastReceived).apply();
+                break;
         }
     }
 

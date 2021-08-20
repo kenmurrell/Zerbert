@@ -66,7 +66,7 @@ public class SmsReceiver extends BroadcastReceiver
                 {
                     String address = PhoneNumberUtils.formatNumber(message.getOriginatingAddress(), "CA");
                     String messageBody = message.getMessageBody();
-                    String number = PhoneNumberUtils.formatNumber(sp.getString("partner_number", "0"));
+                    String number = PhoneNumberUtils.formatNumber(sp.getString("partner_number", "0"), "CA");
                     if(PhoneNumberUtils.compare(number, address))
                     {
                         Log.i(TAG, String.format("Message received: {%s}.", messageBody));

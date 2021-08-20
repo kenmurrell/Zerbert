@@ -2,11 +2,15 @@ package com.kenmurrell.zerbert;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Telephony;
+import android.telephony.PhoneNumberUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -25,6 +29,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.kenmurrell.zerbert.databinding.ActivityMainBinding;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -116,6 +123,54 @@ public class MainActivity extends AppCompatActivity
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, 1);
         }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(!preferences.contains("last_received_emotion"))
+        {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong("last_received_emotion", 0).apply();
+        }
+        CheckLastMessages();
+    }
+
+    public void CheckLastMessages()
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        long lastReceivedEmotion = preferences.getLong("last_received_emotion", 0);
+        int offlineNum = Integer.parseInt(preferences.getString("messaging_offline", "0"));
+        boolean showMessages = preferences.getBoolean("show_messages",false);
+        ContentResolver cr = getContentResolver();
+        Cursor c = cr.query(Telephony.Sms.CONTENT_URI, null, null, null, null);
+        if (c != null && showMessages)
+        {
+            if (c.moveToFirst())
+            {
+                for (int j = 0; j < offlineNum; j++)
+                {
+                    long smsDateNano = c.getLong(c.getColumnIndexOrThrow(Telephony.Sms.DATE));
+
+                    ZoneOffset offset = OffsetDateTime.now().getOffset();
+                    LocalDateTime fromText = LocalDateTime.ofEpochSecond(smsDateNano/1000, 0, offset);
+                    LocalDateTime fromSett = LocalDateTime.ofEpochSecond(lastReceivedEmotion, 0, ZoneOffset.UTC);;
+
+                    String textNumber = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.ADDRESS));
+                    textNumber = PhoneNumberUtils.formatNumber(textNumber, "CA");
+                    String targetNumber = preferences.getString("partner_number", "0");
+                    targetNumber = PhoneNumberUtils.formatNumber(targetNumber, "CA");
+
+                    String body = c.getString(c.getColumnIndexOrThrow(Telephony.Sms.BODY));
+                    int type = c.getInt(c.getColumnIndexOrThrow(Telephony.Sms.TYPE));
+                    if(fromText.isAfter(fromSett)
+                            && type == Telephony.Sms.MESSAGE_TYPE_INBOX
+                            && PhoneNumberUtils.compare(textNumber, targetNumber))
+                    {
+                        onReceiveText(body);
+                    }
+                    c.moveToNext();
+                }
+            }
+            c.close();
+        }
     }
 
     @Override
@@ -151,6 +206,7 @@ public class MainActivity extends AppCompatActivity
     {
         // Register receiver if activity is in front
         this.registerReceiver(receiver, filter);
+        CheckLastMessages();
         super.onResume();
     }
 
@@ -179,6 +235,10 @@ public class MainActivity extends AppCompatActivity
                             .setInverseBackgroundForced(true)
                             .setNeutralButton("Close", (dialog, which) -> dialog.dismiss()).create();
                     pop.show();
+
+                    SharedPreferences.Editor editor = sp.edit();
+                    long lastReceived = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                    editor.putLong("last_received_emotion", lastReceived).apply();
                 });
     }
 }

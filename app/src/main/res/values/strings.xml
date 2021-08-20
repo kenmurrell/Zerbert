@@ -29,6 +29,8 @@
     <string name="show_messages_summary_on">Show messages from your partner\'s app</string>
     <string name="show_messages_summary_off">Do not show messages from your partner\'s app</string>
     <string name="messaging_interval_title">Messaging Interval</string>
+    <string name="messaging_offline_title">Messaging Offline</string>
+    <string name="offline_messaging_summary">Number of offline messages to show when you open the app</string>
     <string name="decrypt_all_title">Decrypt All Notes</string>
     <string name="decrypt_all_summary_on">Nice try; this doesn\'t do anything!</string>
 
