@@ -71,11 +71,18 @@ public class RandomFragment extends Fragment {
         add(Pair.create(R.drawable._0210326_205259, LocalDate.of(2021, 3, 26)));
         add(Pair.create(R.drawable._0210326_205344, LocalDate.of(2021, 3, 26)));
         add(Pair.create(R.drawable._0210326_205358, LocalDate.of(2021, 3, 26)));
+        add(Pair.create(R.drawable._0210519_0000, LocalDate.of(2021, 5, 19)));
+        add(Pair.create(R.drawable._0210523_0000, LocalDate.of(2021, 5, 23)));
+        add(Pair.create(R.drawable._0210530_0000, LocalDate.of(2021, 5, 30)));
         add(Pair.create(R.drawable._0210626_140434, LocalDate.of(2021, 6, 26)));
         add(Pair.create(R.drawable._0210626_141246, LocalDate.of(2021, 6, 26)));
         add(Pair.create(R.drawable._0210626_141301, LocalDate.of(2021, 6, 26)));
         add(Pair.create(R.drawable._0210626_141306, LocalDate.of(2021, 6, 26)));
         add(Pair.create(R.drawable._0210626_141308, LocalDate.of(2021, 6, 26)));
+        add(Pair.create(R.drawable._0210717_121101, LocalDate.of(2021, 7, 17)));
+        add(Pair.create(R.drawable._0210814_001, LocalDate.of(2021, 8, 14)));
+        add(Pair.create(R.drawable._0210814_002, LocalDate.of(2021, 8, 14)));
+        add(Pair.create(R.drawable._0210814_003, LocalDate.of(2021, 8, 14)));
     }};
 
     public RandomFragment()
@@ -101,20 +108,31 @@ public class RandomFragment extends Fragment {
     {
         Log.i(TAG, "Fetching random picture from resources.");
         int i;
-        do
-        {
+        do {
             i = r.nextInt(pictures.size());
-        }
-        while(! history.isEmpty() && history.contains(i));
+        } while (isRecent(i) || !resourceExists(i));
+
         if(history.size() == maxHistorySize)
         {
             history.remove(0);
         }
         history.add(i);
+        int resId = pictures.get(i).first;
+        String date = pictures.get(i).second.format(fmt);
         ImageView image = binding.picturesImage;
-        Log.i(TAG, String.format("Resource {%d} selected.", pictures.get(i).first));
-        Glide.with(this).load(pictures.get(i).first).into(image);
-        binding.textRandom.setText(pictures.get(i).second.format(fmt));
+        Log.i(TAG, String.format("Resource {%d} selected.", resId));
+        Glide.with(this).load(resId).into(image);
+        binding.textRandom.setText(date);
+    }
+
+    private boolean isRecent(int i)
+    {
+        return !history.isEmpty() && history.contains(i);
+    }
+
+    private boolean resourceExists(int i)
+    {
+        return getResources().getResourceName(pictures.get(i).first) != null;
     }
 
     @Override
