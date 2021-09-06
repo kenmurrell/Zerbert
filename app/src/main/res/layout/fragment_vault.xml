@@ -80,12 +80,12 @@
 
         <TextView
             android:id="@+id/vault_status"
-            android:layout_width="187dp"
+            android:layout_width="140dp"
             android:layout_height="39dp"
             android:textAlignment="center"
             android:gravity="center"
             android:textSize="20sp"
-            android:background="#D3D3D3"
+            android:background="@drawable/vault_status_border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"

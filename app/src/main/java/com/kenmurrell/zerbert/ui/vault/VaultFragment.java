@@ -102,7 +102,7 @@ public class VaultFragment extends Fragment
     private void AcceptedPasswordState(String name, String sha1)
     {
         binding.vaultStatus.setText(R.string.vault_status_accepted);
-        binding.vaultStatus.setTextColor(Color.GREEN);
+        binding.vaultStatus.setTextColor(getResources().getColor(R.color.light_green_A400, getContext().getTheme()));
         binding.vaultNoteTitle.setText(name);
 
         int noteId = items.get(sha1);
